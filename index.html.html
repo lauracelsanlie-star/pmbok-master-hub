@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PMBOK Learning Platform | Guía Interactiva y Mentor IA</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f6fe',
+              100: '#ddedfd',
+              500: '#0284c7',
+              700: '#0369a1',
+              800: '#1e3a8a',
+              900: '#0f172a',
+              950: '#090d16'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Estilos personalizados para efectos 3D de Flashcards */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+    .transform-style-preserve-3d {
+      transform-style: preserve-3d;
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+    .tab-view {
+      display: none;
+    }
+    .tab-view.active {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Scrollbar estilizada */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- Header Superior Corporativo -->
+  <header class="bg-brand-900 border-b border-brand-800 text-white sticky top-0 z-40 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+      
+      <!-- Logo e Identidad -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-sky-500 to-blue-700 flex items-center justify-center shadow-inner">
+          <i data-lucide="compass" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <span class="font-extrabold text-lg tracking-tight block text-white leading-none">PMBOK<span class="text-sky-400 font-medium">Academy</span></span>
+          <span class="text-[10px] text-slate-400 font-mono tracking-widest uppercase">Estándar PMI & Vibecoding</span>
+        </div>
+      </div>
+
+      <!-- Menú Desktop -->
+      <nav class="hidden md:flex items-center space-x-1" id="nav-desktop">
+        <button onclick="changeTab('fases')" class="nav-tab-btn px-3 py-1.5 rounded-md text-xs font-semibold tracking-wide uppercase transition text-white bg-brand-800" data-view="fases">
+          <i data-lucide="layers" class="w-4 h-4 inline mr-1 text-sky-400"></i> Fases y Procesos
+        </button>
+        <button onclick="changeTab('flashcards')" class="nav-tab-btn px-3 py-1.5 rounded-md text-xs font-semibold tracking-wide uppercase transition text-slate-300 hover:text-white hover:bg-brand-800/60" data-view="flashcards">
+          <i data-lucide="credit-card" class="w-4 h-4 inline mr-1 text-sky-400"></i> Tarjetas Didácticas
+        </button>
+        <button onclick="changeTab('mentor-ia')" class="nav-tab-btn px-3 py-1.5 rounded-md text-xs font-semibold tracking-wide uppercase transition text-slate-300 hover:text-white hover:bg-brand-800/60" data-view="mentor-ia">
+          <i data-lucide="sparkles" class="w-4 h-4 inline mr-1 text-amber-400"></i> Mentor PMP IA
+        </button>
+        <button onclick="changeTab('evm')" class="nav-tab-btn px-3 py-1.5 rounded-md text-xs font-semibold tracking-wide uppercase transition text-slate-300 hover:text-white hover:bg-brand-800/60" data-view="evm">
+          <i data-lucide="calculator" class="w-4 h-4 inline mr-1 text-sky-400"></i> Calculadora EVM
+        </button>
+        <button onclick="changeTab('glosario')" class="nav-tab-btn px-3 py-1.5 rounded-md text-xs font-semibold tracking-wide uppercase transition text-slate-300 hover:text-white hover:bg-brand-800/60" data-view="glosario">
+          <i data-lucide="book-marked" class="w-4 h-4 inline mr-1 text-sky-400"></i> Glosario
+        </button>
+        <button onclick="changeTab('plantillas')" class="nav-tab-btn px-3 py-1.5 rounded-md text-xs font-semibold tracking-wide uppercase transition text-slate-300 hover:text-white hover:bg-brand-800/60" data-view="plantillas">
+          <i data-lucide="folder-down" class="w-4 h-4 inline mr-1 text-sky-400"></i> Plantillas
+        </button>
+      </nav>
+
+      <!-- Badge de Estado Académico -->
+      <div class="hidden lg:flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-950 text-emerald-300 border border-emerald-800/80">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> PMBOK 6ª y 7ª Ed.
+        </span>
+      </div>
+    </div>
+
+    <!-- Menú Móvil Desplazable -->
+    <div class="md:hidden flex border-t border-brand-800/80 overflow-x-auto text-xs py-2 px-3 gap-2 bg-brand-950 scrollbar-none">
+      <button onclick="changeTab('fases')" class="nav-m-btn px-3 py-1.5 rounded bg-brand-800 text-white font-medium whitespace-nowrap" data-view="fases">Fases</button>
+      <button onclick="changeTab('flashcards')" class="nav-m-btn px-3 py-1.5 rounded text-slate-300 font-medium whitespace-nowrap" data-view="flashcards">Tarjetas</button>
+      <button onclick="changeTab('mentor-ia')" class="nav-m-btn px-3 py-1.5 rounded text-amber-300 font-medium whitespace-nowrap" data-view="mentor-ia">Mentor IA</button>
+      <button onclick="changeTab('evm')" class="nav-m-btn px-3 py-1.5 rounded text-slate-300 font-medium whitespace-nowrap" data-view="evm">EVM</button>
+      <button onclick="changeTab('glosario')" class="nav-m-btn px-3 py-1.5 rounded text-slate-300 font-medium whitespace-nowrap" data-view="glosario">Glosario</button>
+      <button onclick="changeTab('plantillas')" class="nav-m-btn px-3 py-1.5 rounded text-slate-300 font-medium whitespace-nowrap" data-view="plantillas">Plantillas</button>
+    </div>
+  </header>
+
+  <!-- Banner Hero Explicativo -->
+  <section class="bg-gradient-to-r from-brand-950 via-brand-900 to-slate-900 text-white py-8 px-4 sm:px-6 lg:px-8 border-b border-brand-800">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-2 max-w-3xl">
+        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-900/60 text-sky-300 border border-sky-700/60">
+          <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i> Hub de Aprendizaje Práctico
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Aprende Gestión de Proyectos con Enfoque Didáctico y Casos Reales</h1>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          Explora los 5 Grupos de Procesos con sus flujos detallados, entrena tu mente con tarjetas de estudio activas y consulta a tu propio Mentor de Inteligencia Artificial para resolver cualquier duda situacional.
+        </p>
+      </div>
+      
+      <!-- Contador Rápido de Progreso -->
+      <div class="flex items-center gap-3 bg-brand-900/90 p-4 rounded-xl border border-brand-700/80 shadow-sm w-full md:w-auto">
+        <div class="p-2.5 bg-sky-950/80 rounded-lg text-sky-400">
+          <i data-lucide="award" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Tarjetas Dominadas</div>
+          <div class="text-xl font-bold text-white flex items-baseline gap-1">
+            <span id="mastered-count" class="text-emerald-400">0</span>
+            <span class="text-xs text-slate-400">/ <span id="total-cards-count">10</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contenedor Principal de Vistas -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+    <!-- ==========================================
+         VISTA 1: EXPLORADOR DE FASES Y PROCESOS
+         ========================================== -->
+    <div id="view-fases" class="tab-view active space-y-6">
+      
+      <!-- Cabecera de la sección -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-200">
+        <div>
+          <h2 class="text-xl font-bold text-brand-900 flex items-center gap-2">
+            <i data-lucide="workflow" class="w-5 h-5 text-sky-600"></i> Los 5 Grupos de Procesos del PMBOK
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600">Haz clic en cada fase para ver sus procesos correspondientes, objetivos, entradas/herramientas/salidas (ITTOs) y casos del mundo real.</p>
+        </div>
+        
+        <!-- Toggle Enfoque Metodológico -->
+        <div class="flex bg-slate-200 p-1 rounded-lg text-xs font-semibold text-slate-600">
+          <button id="btn-enf-pred" onclick="setEnfoque('predictivo')" class="px-3 py-1 rounded bg-white text-brand-900 shadow-xs">Predictivo (Cascada)</button>
+          <button id="btn-enf-agil" onclick="setEnfoque('agil')" class="px-3 py-1 rounded hover:text-brand-900">Ágil / Iterativo</button>
+        </div>
+      </div>
+
+      <!-- Selector de Grupos de Procesos -->
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3" id="phase-tabs-container">
+        <!-- Renderizado dinámico de botones de fase -->
+      </div>
+
+      <!-- Detalle de la Fase Seleccionada -->
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden" id="phase-detail-card">
+        <!-- Contenido dinámico con JavaScript -->
+      </div>
+    </div>
+
+    <!-- ==========================================
+         VISTA 2: TARJETAS DE ESTUDIO (FLASHCARDS)
+         ========================================== -->
+    <div id="view-flashcards" class="tab-view space-y-6">
+      
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200">
+        <div>
+          <h2 class="text-xl font-bold text-brand-900 flex items-center gap-2">
+            <i data-lucide="flip-horizontal" class="w-5 h-5 text-sky-600"></i> Flashcards Didácticas de Repaso Activo
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600">Haz clic sobre cualquier tarjeta para voltearla y descubrir el concepto con su aplicación práctica.</p>
+        </div>
+        
+        <!-- Filtros por Categoría -->
+        <div class="flex flex-wrap gap-2 text-xs" id="flashcard-filters">
+          <button onclick="filterFlashcards('todos')" class="fc-filter px-3 py-1.5 rounded-full font-medium bg-brand-900 text-white" data-cat="todos">Todas</button>
+          <button onclick="filterFlashcards('cronograma')" class="fc-filter px-3 py-1.5 rounded-full font-medium bg-slate-100 text-slate-700 hover:bg-slate-200" data-cat="cronograma">Cronograma</button>
+          <button onclick="filterFlashcards('alcance')" class="fc-filter px-3 py-1.5 rounded-full font-medium bg-slate-100 text-slate-700 hover:bg-slate-200" data-cat="alcance">Alcance</button>
+          <button onclick="filterFlashcards('riesgos')" class="fc-filter px-3 py-1.5 rounded-full font-medium bg-slate-100 text-slate-700 hover:bg-slate-200" data-cat="riesgos">Riesgos</button>
+          <button onclick="filterFlashcards('costos')" class="fc-filter px-3 py-1.5 rounded-full font-medium bg-slate-100 text-slate-700 hover:bg-slate-200" data-cat="costos">Costos</button>
+        </div>
+      </div>
+
+      <!-- Cuadrícula de Tarjetas Interactivas -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="flashcards-grid">
+        <!-- Inyección dinámica de las tarjetas -->
+      </div>
+    </div>
+
+    <!-- ==========================================
+         VISTA 3: ASISTENTE MENTOR PMP (GEMINI IA)
+         ========================================== -->
+    <div id="view-mentor-ia" class="tab-view space-y-6">
+      
+      <div class="bg-gradient-to-r from-sky-900 to-brand-900 p-6 rounded-2xl text-white shadow-md">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">
+              <i data-lucide="bot" class="w-3.5 h-3.5"></i> Powered by Gemini 3 Flash
+            </span>
+            <h2 class="text-xl sm:text-2xl font-bold">Mentor Senior PMP® con IA</h2>
+            <p class="text-xs sm:text-sm text-slate-300 max-w-2xl">
+              Pregúntale sobre cualquier proceso, duda situacional, cómo aplicar una técnica en tu empresa o solicita una explicación sencilla con analogías.
+            </p>
+          </div>
+          <!-- Preguntas sugeridas rápidas -->
+          <div class="flex flex-wrap gap-2">
+            <button onclick="askPresetPrompt('¿Cuál es la diferencia exacta entre Fast Tracking y Crashing con un ejemplo de construcción?')" class="text-[11px] bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-1.5 rounded-lg text-slate-200 transition">
+              Fast Tracking vs Crashing
+            </button>
+            <button onclick="askPresetPrompt('Explícame de forma muy sencilla qué es la EDT/WBS y por qué no es una lista de tareas.')" class="text-[11px] bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-1.5 rounded-lg text-slate-200 transition">
+              ¿Qué es la EDT?
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenedor del Chatbot -->
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col h-[520px] overflow-hidden">
+        
+        <!-- Historial de Conversación -->
+        <div id="chat-messages" class="flex-grow p-4 sm:p-6 overflow-y-auto space-y-4">
+          <!-- Mensaje inicial de bienvenida -->
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-brand-900 text-sky-400 flex items-center justify-center flex-shrink-0 text-xs font-bold">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+            </div>
+            <div class="bg-slate-100 border border-slate-200 text-slate-800 rounded-2xl rounded-tl-none p-3.5 max-w-2xl text-xs sm:text-sm leading-relaxed space-y-2">
+              <p><strong>¡Hola! Soy tu Mentor de Gestión de Proyectos PMP®.</strong></p>
+              <p>Estoy entrenado para guiarte en el estándar PMBOK, interpretar diagramas de red, explicar el método de Valor Ganado (EVM) o analizar situaciones complejas con interesados y cambios de alcance.</p>
+              <p class="text-slate-500 text-xs">Escribe tu pregunta abajo o selecciona uno de los temas sugeridos para empezar.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Entrada y Enviar -->
+        <div class="p-3 sm:p-4 bg-slate-50 border-t border-slate-200">
+          <form onsubmit="handleChatSubmit(event)" class="flex gap-2">
+            <input 
+              type="text" 
+              id="chat-input" 
+              placeholder="Ej: ¿Qué se hace primero cuando un cliente pide un cambio fuera de alcance?" 
+              class="flex-grow px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
+              autocomplete="off"
+            >
+            <button 
+              type="submit" 
+              id="chat-send-btn"
+              class="bg-brand-900 hover:bg-brand-800 text-white px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition disabled:opacity-50"
+            >
+              <span>Enviar</span>
+              <i data-lucide="send" class="w-4 h-4"></i>
+            </button>
+          </form>
+          <div class="flex items-center justify-between text-[11px] text-slate-500 mt-2 px-1">
+            <span>Alineado con el marco ético y la mentalidad PMI.</span>
+            <span id="chat-status" class="text-slate-400">Listo para consultar</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==========================================
+         VISTA 4: CALCULADORA EVM PROFESIONAL
+         ========================================== -->
+    <div id="view-evm" class="tab-view space-y-6">
+      <div class="pb-4 border-b border-slate-200">
+        <h2 class="text-xl font-bold text-brand-900 flex items-center gap-2">
+          <i data-lucide="calculator" class="w-5 h-5 text-sky-600"></i> Laboratorio de Gestión del Valor Ganado (EVM)
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600">Experimenta con los indicadores del método EVM para entender cómo diagnosticar salud financiera y cronológica.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Formulario Interactivo -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-xs uppercase tracking-wider text-brand-900">Parámetros de Entrada</h3>
+            <span class="text-[11px] text-sky-600 bg-sky-50 px-2 py-0.5 rounded font-mono font-bold">Datos en USD</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">BAC (Presupuesto Total a la Conclusión)</label>
+            <input type="number" id="evm-bac" value="120000" class="w-full text-xs sm:text-sm p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <span class="text-[10px] text-slate-500">¿Cuánto dinero se aprobó en total para el proyecto?</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">PV (Valor Planificado a la fecha actual)</label>
+            <input type="number" id="evm-pv" value="60000" class="w-full text-xs sm:text-sm p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <span class="text-[10px] text-slate-500">¿Cuánto trabajo debía estar listo según el cronograma?</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">EV (Valor Ganado - Trabajo Realmente Hecho)</label>
+            <input type="number" id="evm-ev" value="50000" class="w-full text-xs sm:text-sm p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <span class="text-[10px] text-slate-500">¿Cuál es el valor del trabajo físico ejecutado hasta hoy?</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">AC (Costo Real Incurrido)</label>
+            <input type="number" id="evm-ac" value="65000" class="w-full text-xs sm:text-sm p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <span class="text-[10px] text-slate-500">¿Cuánto dinero se ha pagado en facturas y horas hombre?</span>
+          </div>
+
+          <button onclick="runEVMAnalysis()" class="w-full bg-brand-900 hover:bg-brand-800 text-white font-semibold text-xs sm:text-sm py-2.5 rounded-lg shadow transition flex items-center justify-center gap-2">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Actualizar Diagnóstico
+          </button>
+        </div>
+
+        <!-- Métricas y Diagnóstico Didáctico -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            <!-- CV -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Variación Costo (CV)</span>
+                <div id="metric-cv" class="text-lg sm:text-xl font-extrabold mt-1 text-slate-800">$0</div>
+              </div>
+              <span class="text-[10px] text-slate-400 font-mono mt-2">EV - AC</span>
+            </div>
+            <!-- SV -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Variación Tiempo (SV)</span>
+                <div id="metric-sv" class="text-lg sm:text-xl font-extrabold mt-1 text-slate-800">$0</div>
+              </div>
+              <span class="text-[10px] text-slate-400 font-mono mt-2">EV - PV</span>
+            </div>
+            <!-- CPI -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Índice Costo (CPI)</span>
+                <div id="metric-cpi" class="text-lg sm:text-xl font-extrabold mt-1 text-slate-800">1.00</div>
+              </div>
+              <span class="text-[10px] text-slate-400 font-mono mt-2">EV / AC</span>
+            </div>
+            <!-- SPI -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Índice Tiempo (SPI)</span>
+                <div id="metric-spi" class="text-lg sm:text-xl font-extrabold mt-1 text-slate-800">1.00</div>
+              </div>
+              <span class="text-[10px] text-slate-400 font-mono mt-2">EV / PV</span>
+            </div>
+          </div>
+
+          <!-- Diagnóstico Didáctico -->
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h4 class="font-bold text-sm text-brand-900 uppercase tracking-wide flex items-center gap-2">
+              <i data-lucide="file-spreadsheet" class="w-4 h-4 text-sky-600"></i> Interpretación del Estado para el Comité Directivo
+            </h4>
+            <div id="evm-feedback" class="space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed">
+              <!-- Análisis inyectado por JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         VISTA 5: GLOSARIO INTELIGENTE
+         ========================================== -->
+    <div id="view-glosario" class="tab-view space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200">
+        <div>
+          <h2 class="text-xl font-bold text-brand-900 flex items-center gap-2">
+            <i data-lucide="book-open-check" class="w-5 h-5 text-sky-600"></i> Glosario de Términos y Conceptos Clave
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600">Busca rápidamente definiciones clave con explicaciones sin rodeos para el día a día.</p>
+        </div>
+        <!-- Input de Búsqueda -->
+        <div class="relative w-full sm:w-72">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
+          <input 
+            type="text" 
+            id="glossary-search" 
+            oninput="searchGlossary()" 
+            placeholder="Buscar concepto o acrónimo..." 
+            class="w-full pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+          >
+        </div>
+      </div>
+
+      <!-- Tarjetas del Glosario -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="glossary-grid">
+        <!-- Render dinámico -->
+      </div>
+    </div>
+
+    <!-- ==========================================
+         VISTA 6: PLANTILLAS Y ARTEFACTOS
+         ========================================== -->
+    <div id="view-plantillas" class="tab-view space-y-6">
+      <div class="pb-4 border-b border-slate-200">
+        <h2 class="text-xl font-bold text-brand-900 flex items-center gap-2">
+          <i data-lucide="folder-git-2" class="w-5 h-5 text-sky-600"></i> Formatos y Artefactos Oficiales para Descarga
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600">Plantillas en formato estructurado listas para usar en proyectos reales o anexar a documentación de entrega.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Plantilla 1: Project Charter -->
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col justify-between hover:border-slate-300 transition">
+          <div class="space-y-3">
+            <div class="w-10 h-10 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center font-bold">
+              <i data-lucide="file-check" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-base text-slate-900">Acta de Constitución (Project Charter)</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              El documento fundacional que autoriza formalmente el proyecto, asigna la autoridad del Project Manager y delimita los límites de alto nivel.
+            </p>
+          </div>
+          <button onclick="downloadArtifact('charter')" class="mt-4 w-full flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-brand-900 text-xs font-semibold py-2.5 rounded-lg transition">
+            <i data-lucide="download" class="w-4 h-4"></i> Descargar Documento (.txt)
+          </button>
+        </div>
+
+        <!-- Plantilla 2: Risk Register -->
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col justify-between hover:border-slate-300 transition">
+          <div class="space-y-3">
+            <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+              <i data-lucide="shield-alert" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-base text-slate-900">Matriz de Registro de Riesgos</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Estructura formal con evaluación cualitativa de probabilidad e impacto (PxI), planes de mitigación, contingencias y responsables.
+            </p>
+          </div>
+          <button onclick="downloadArtifact('riesgos')" class="mt-4 w-full flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-brand-900 text-xs font-semibold py-2.5 rounded-lg transition">
+            <i data-lucide="download" class="w-4 h-4"></i> Descargar Documento (.txt)
+          </button>
+        </div>
+
+        <!-- Plantilla 3: Solicitud de Cambio -->
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col justify-between hover:border-slate-300 transition">
+          <div class="space-y-3">
+            <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center font-bold">
+              <i data-lucide="git-pull-request" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-base text-slate-900">Formato de Solicitud de Cambio (CR)</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Formulario para el Control Integrado de Cambios con análisis de impacto multidimensional (costo, tiempo, calidad) para el comité CCB.
+            </p>
+          </div>
+          <button onclick="downloadArtifact('cambios')" class="mt-4 w-full flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-brand-900 text-xs font-semibold py-2.5 rounded-lg transition">
+            <i data-lucide="download" class="w-4 h-4"></i> Descargar Documento (.txt)
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer Institucional -->
+  <footer class="bg-brand-950 text-slate-400 py-6 border-t border-brand-900 text-xs mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-2">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+        <span>Diseñado para Aprendizaje Profundo y Preparación Certificación PMP®. Estándar PMI.</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="hover:text-white transition">Vibecoding & Google Gemini API</span>
+        <span>•</span>
+        <span>Código 100% Desplegable</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================
+       DATOS Y LÓGICA JAVASCRIPT INTEGRADA (CLIENT-SIDE)
+       ======================================================== -->
+  <script>
+    // ----------------------------------------------------------------
+    // 1. BASE DE DATOS DE FASES Y PROCESOS PMBOK CON EJEMPLOS REALES
+    // ----------------------------------------------------------------
+    const phasesData = {
+      inicio: {
+        id: "inicio",
+        num: "01",
+        name: "Grupo de Procesos de Inicio",
+        badge: "Fundamento Legal y Estratégico",
+        desc: "Define formalmente el proyecto o una fase al obtener la autorización oficial. Asegura que el proyecto se alinee con los objetivos de negocio de la organización.",
+        enfoqueDiff: {
+          predictivo: "Enfoque tradicional: El acta delimita límites estrictos de presupuesto y alcance desde el primer día.",
+          agil: "Enfoque ágil: El acta define una visión general (Product Vision), criterios de valor de negocio y empodera al Product Owner."
+        },
+        processes: [
+          {
+            name: "Desarrollar el Acta de Constitución (Project Charter)",
+            objetivo: "Crear el documento que autoriza formalmente la existencia del proyecto y otorga autoridad al Project Manager para aplicar recursos organizacionales.",
+            entradas: "Caso de Negocio (Business Case), Acuerdos/Contratos, Factores Ambientales de la Empresa (EEFs).",
+            herramientas: "Juicio de Expertos, Recopilación de Datos (Entrevistas, Tormenta de ideas), Habilidades Interpersonales.",
+            salidas: "Acta de Constitución del Proyecto (Project Charter) firmada y Registro de Supuestos/Premisas.",
+            ejemploReal: "En una empresa fintech, antes de escribir una sola línea de código para una nueva app de pagos, el patrocinador firma el Charter autorizando $200,000 USD y nombra a María como PM, otorgándole poder legal para negociar con el banco proveedor."
+          },
+          {
+            name: "Identificar a los Interesados (Stakeholders)",
+            objetivo: "Identificar a todas las personas, grupos u organizaciones que pueden afectar o verse afectados por una decisión, actividad o resultado del proyecto.",
+            entradas: "Acta de Constitución, Documentos de Adquisiciones, Acuerdos comerciales.",
+            herramientas: "Análisis de Interesados (Matriz Poder vs. Interés), Juicio de Expertos, Reuniones.",
+            salidas: "Registro de Interesados (Stakeholder Register) con nombres, expectativas, nivel de influencia y clasificación.",
+            ejemploReal: "En la construcción de un hospital público, los interesados no son solo los médicos y directivos, sino también los vecinos de la zona (ruido) y el sindicato de constructores. Mapearlos a tiempo previene bloqueos de obra."
+          }
+        ]
+      },
+      planificacion: {
+        id: "planificacion",
+        num: "02",
+        name: "Grupo de Procesos de Planificación",
+        badge: "Creación de las Líneas Base",
+        desc: "Establece el alcance total del esfuerzo, define y refina los objetivos y desarrolla la línea de acción requerida para alcanzar dichas metas (Líneas base de Alcance, Cronograma y Costo).",
+        enfoqueDiff: {
+          predictivo: "Planificación exhaustiva y detallada previa al inicio de la ejecución ('Plan-driven').",
+          agil: "Planificación continua y adaptativa mediante refinamiento del Product Backlog y planificación de sprint (Sprint Planning)."
+        },
+        processes: [
+          {
+            name: "Crear la EDT / WBS (Estructura de Desglose del Trabajo)",
+            objetivo: "Descomponer jerárquicamente el alcance total del trabajo en partes más pequeñas y manejables llamadas Paquetes de Trabajo (Work Packages).",
+            entradas: "Enunciado del Alcance del Proyecto, Plan de Gestión del Alcance.",
+            herramientas: "Descomposición jerárquica (Regla del 100%), Juicio de Expertos.",
+            salidas: "Línea Base del Alcance (Enunciado del Alcance + EDT + Diccionario de la EDT).",
+            ejemploReal: "Para fabricar un automóvil, la EDT no dice 'armar motor', sino que desglosa: 1.1 Bloque motor -> 1.1.1 Pistones -> 1.1.2 Cigüeñal. Cada nivel tiene un responsable y costo exacto asignado."
+          },
+          {
+            name: "Desarrollar el Cronograma y Ruta Crítica (CPM)",
+            objetivo: "Analizar secuencias de actividades, duraciones, requisitos de recursos y restricciones del cronograma para crear el modelo de programación del proyecto.",
+            entradas: "Lista de Actividades, Diagramas de Red, Estimación de Duraciones.",
+            herramientas: "Método de la Ruta Crítica (CPM), Compresión del Cronograma (Fast Tracking / Crashing).",
+            salidas: "Línea Base del Cronograma, Cronograma del Proyecto y Datos de Programación.",
+            ejemploReal: "En el lanzamiento de un satélite, la secuencia: 'Diseño -> Pruebas de vacío -> Transporte -> Carga de combustible' tiene holgura cero. Si las pruebas de vacío se retrasan 3 días, todo el lanzamiento se posterga 3 días."
+          },
+          {
+            name: "Planificar la Gestión de Riesgos",
+            objetivo: "Definir cómo conducir las actividades de gestión de riesgos para el proyecto (identificación, análisis cualitativo y cuantitativo, planes de respuesta).",
+            entradas: "Plan para la Dirección del Proyecto, Registro de Interesados.",
+            herramientas: "Análisis de datos, Reuniones de planificación, Juicio de Expertos.",
+            salidas: "Plan de Gestión de Riesgos y Categorías de Riesgo (RBS - Estructura de Desglose del Riesgo).",
+            ejemploReal: "En un proyecto agrícola, el equipo establece de antemano que si las lluvias se retrasan más de 2 semanas (gatillo de riesgo), se activará inmediatamente la compra de agua para riego por goteo con fondos de reserva."
+          }
+        ]
+      },
+      ejecucion: {
+        id: "ejecucion",
+        num: "03",
+        name: "Grupo de Procesos de Ejecución",
+        badge: "Generación de Entregables Reales",
+        desc: "Coordina personas y recursos, gestiona las expectativas de los interesados e integra y realiza las actividades del proyecto conforme al plan de dirección.",
+        enfoqueDiff: {
+          predictivo: "Los equipos ejecutan las órdenes de trabajo siguiendo la ruta de asignación preestablecida.",
+          agil: "Equipos autoorganizados y multidisciplinarios que jalan tareas del sprint backlog mediante ceremonias diarias (Daily Standups)."
+        },
+        processes: [
+          {
+            name: "Dirigir y Gestionar el Trabajo del Proyecto",
+            objetivo: "Liderar y realizar el trabajo definido en el plan para implementar los cambios aprobados y generar los entregables tangibles.",
+            entradas: "Plan para la Dirección del Proyecto, Solicitudes de Cambio Aprobadas.",
+            herramientas: "Sistema de Información para la Dirección de Proyectos (PMIS), Reuniones.",
+            salidas: "Entregables del proyecto, Datos de Desempeño del Trabajo, Registro de Incidentes (Issue Log).",
+            ejemploReal: "Los ingenieros de software programan las APIs y los diseñadores entregan pantallas. El PM documenta en el Issue Log que un servidor de pruebas cayó y asigna a un técnico para resolverlo en 2 horas."
+          },
+          {
+            name: "Gestionar el Conocimiento del Proyecto",
+            objetivo: "Utilizar el conocimiento existente y crear nuevo conocimiento para alcanzar los objetivos del proyecto y contribuir al aprendizaje organizacional.",
+            entradas: "Entregables, Registro de Lecciones Aprendidas, Factores organizacionales.",
+            herramientas: "Gestión del Conocimiento (Comunidades de práctica, foros técnicos), Habilidades interpersonales.",
+            salidas: "Registro de Lecciones Aprendidas actualizado con hallazgos clave.",
+            ejemploReal: "En una planta química, un operario descubre que precalentar una válvula reduce el tiempo de ensamble un 15%. Este hallazgo se documenta de inmediato para que ningún otro turno vuelva a usar el método lento anterior."
+          }
+        ]
+      },
+      monitoreo: {
+        id: "monitoreo",
+        num: "04",
+        name: "Grupo de Monitoreo y Control",
+        badge: "Auditoría de Líneas Base y Cambios",
+        desc: "Rastrea, revisa y regula el avance y desempeño del proyecto; identifica áreas en las que el plan requiere cambios e inicia los cambios correspondientes.",
+        enfoqueDiff: {
+          predictivo: "Control estricto mediante valor ganado (EVM) y solicitudes de cambio revisadas por el CCB.",
+          agil: "Control empírico mediante revisiones de sprint (Sprint Review), retrospectivas y gráficos de quemado (Burndown charts)."
+        },
+        processes: [
+          {
+            name: "Realizar el Control Integrado de Cambios",
+            objetivo: "Revisar todas las solicitudes de cambio, aprobar o rechazar cambios a entregables, activos de procesos y líneas base del proyecto, y comunicar decisiones.",
+            entradas: "Solicitudes de cambio, Informes de Desempeño del Trabajo, Plan de Dirección.",
+            herramientas: "Herramientas de control de cambios, Juicio de Expertos, Comité de Control de Cambios (CCB).",
+            salidas: "Solicitudes de cambio aprobadas o rechazadas, Actualizaciones a las líneas base.",
+            ejemploReal: "El cliente quiere agregar reconocimiento facial a una app móvil ya en curso. El PM calcula que costará $15,000 USD y 3 semanas extra. El CCB evalúa el informe y aprueba el cambio ajustando la línea base oficial."
+          },
+          {
+            name: "Controlar los Costos y el Cronograma (EVM)",
+            objetivo: "Monitorear el estado del proyecto para actualizar costos y cronograma, gestionando cambios a las líneas base aprobadas.",
+            entradas: "Datos de Desempeño del Trabajo, Líneas base de Costo y Cronograma.",
+            herramientas: "Gestión del Valor Ganado (EVM: EV, PV, AC, CPI, SPI), Análisis de Variaciones y Tendencias.",
+            salidas: "Pronósticos de Costo (EAC, ETC), Pronósticos del Cronograma, Solicitudes de Cambio.",
+            ejemploReal: "A mitad de un proyecto de $100k, el PM detecta un CPI de 0.80. Diagnostica que los costos reales superan el valor producido e implementa medidas correctivas antes de agotar la reserva."
+          }
+        ]
+      },
+      cierre: {
+        id: "cierre",
+        num: "05",
+        name: "Grupo de Procesos de Cierre",
+        badge: "Entrega Formal y Lecciones",
+        desc: "Finaliza formalmente todas las actividades a través de todos los grupos de procesos de la dirección del proyecto para completar contractual y administrativamente el proyecto o fase.",
+        enfoqueDiff: {
+          predictivo: "Aceptación formal firmada, auditoría de adquisiciones y traspaso a operaciones.",
+          agil: "El producto se entrega de manera continua al final de cada iteración, pero se realiza un cierre formal de hitos o release global."
+        },
+        processes: [
+          {
+            name: "Cerrar el Proyecto o Fase",
+            objetivo: "Finalizar formalmente todos los acuerdos contractuales, archivar la documentación del proyecto, transferir el producto final y liberar los recursos del equipo.",
+            entradas: "Acta de Constitución, Entregables Aceptados, Documentos de Adquisiciones.",
+            herramientas: "Auditorías de proyecto, Análisis de documentos, Reuniones de cierre.",
+            salidas: "Informe Final del Proyecto, Transferencia formal del producto o servicio a operaciones, Lecciones Aprendidas finales.",
+            ejemploReal: "Tras construir una subestación eléctrica, se entrega el manual de operación a la comisión de energía, se liquidan los contratos con electricistas subcontratados y se archiva el informe de costos final."
+          }
+        ]
+      }
+    };
+
+    let activePhase = "inicio";
+    let activeEnfoque = "predictivo";
+
+    // ----------------------------------------------------------------
+    // 2. BASE DE DATOS DE FLASHCARDS DIDÁCTICAS (REPASO ACTIVO)
+    // ----------------------------------------------------------------
+    const flashcardsData = [
+      {
+        id: 1,
+        cat: "cronograma",
+        term: "Ruta Crítica (Critical Path)",
+        pregunta: "¿Qué es la Ruta Crítica y qué holgura (float) tiene?",
+        respuesta: "Es la secuencia más larga de actividades en el diagrama de red que determina la duración total mínima del proyecto. Su holgura total es CERO (0). Cualquier retraso en una actividad de la ruta crítica retrasará el proyecto completo.",
+        ejemplo: "Si la ruta 'A -> B -> C' toma 25 días y cualquier otra ruta toma 18 días, esa es la crítica. Si la tarea B se atrasa 1 día, todo el proyecto termina un día tarde."
+      },
+      {
+        id: 2,
+        cat: "cronograma",
+        term: "Fast Tracking vs. Crashing",
+        pregunta: "¿Cuál es la diferencia entre Compresión (Crashing) y Ejecución Rápida (Fast Tracking)?",
+        respuesta: "Crashing: Añadir recursos a actividades en la ruta crítica para recortar tiempo (Aumenta el COSTO).\nFast Tracking: Ejecutar en paralelo actividades que normalmente se harían en secuencia (Aumenta el RIESGO de retrabajo).",
+        ejemplo: "Pagar horas extra a albañiles es Crashing (cuesta más). Pintar las paredes del primer piso mientras aún se cablea el segundo piso es Fast Tracking (riesgo si se mancha)."
+      },
+      {
+        id: 3,
+        cat: "alcance",
+        term: "EDT / WBS (Work Breakdown Structure)",
+        pregunta: "¿Qué es la EDT y cuál es la Regla del 100%?",
+        respuesta: "Es una descomposición jerárquica orientada a entregables de todo el trabajo del proyecto. La Regla del 100% dicta que la suma del trabajo de los niveles inferiores debe ser igual al 100% del nivel superior, sin omitir ni agregar nada que no pertenezca al alcance.",
+        ejemplo: "La EDT no es una lista cronológica 'to-do'. Sus componentes son sustantivos o entregables ('Módulo de Facturación', 'Cimientos de Hormigón'), no verbos de acción."
+      },
+      {
+        id: 4,
+        cat: "alcance",
+        term: "Corrupción del Alcance (Scope Creep)",
+        pregunta: "¿Qué es el Scope Creep y por qué es peligroso?",
+        respuesta: "Es la adición incontrolada de funciones o requerimientos sin ajustes en el presupuesto, cronograma o recursos, y sin pasar por el proceso formal de Control Integrado de Cambios.",
+        ejemplo: "Aceptar llamadas telefónicas del cliente pidiendo 'pequeños botones adicionales' sin documentar impacto termina atrasando el proyecto semanas enteras."
+      },
+      {
+        id: 5,
+        cat: "costos",
+        term: "Valor Ganado: CPI y SPI",
+        pregunta: "¿Qué significan un CPI = 0.85 y un SPI = 1.15?",
+        respuesta: "CPI < 1.0 (0.85): El proyecto está SOBRE PRESUPUESTO (por cada dólar gastado, solo se generan 85 centavos de valor).\nSPI > 1.0 (1.15): El proyecto va ADELANTADO en el cronograma.",
+        ejemplo: "Vas más rápido de lo previsto, pero te está costando más caro de lo planeado."
+      },
+      {
+        id: 6,
+        cat: "costos",
+        term: "Reserva de Contingencia vs. Gestión",
+        pregunta: "¿Cuál es la diferencia entre Reserva de Contingencia y Reserva de Gestión?",
+        respuesta: "Contingencia: Para riesgos identificados ('conocidos desconocidos'). Está dentro de la línea base de costo y la maneja el PM.\nGestión: Para riesgos imprevistos ('desconocidos desconocidos'). No está en la línea base de costo y requiere autorización del Sponsor.",
+        ejemplo: "Un fondo para lluvia pronosticada es Contingencia. Un fondo por una pandemia o terremoto imprevisto es Gestión."
+      },
+      {
+        id: 7,
+        cat: "riesgos",
+        term: "Estrategias de Riesgos Negativos",
+        pregunta: "¿Cuáles son las 4 respuestas ante amenazas (riesgos negativos)?",
+        respuesta: "1. Evitar (Eliminar la causa del riesgo).\n2. Mitigar (Reducir probabilidad o impacto).\n3. Transferir (Pasar el impacto a un tercero, ej. seguro).\n4. Aceptar (Reconocer el riesgo y documentarlo pasiva o activamente).",
+        ejemplo: "Contratar una póliza de seguro contra incendios es Transferir. Cambiar el diseño para no cruzar un río peligroso es Evitar."
+      },
+      {
+        id: 8,
+        cat: "riesgos",
+        term: "Estrategias de Oportunidades (Riesgos Positivos)",
+        pregunta: "¿Cuáles son las respuestas ante oportunidades según el PMI?",
+        respuesta: "1. Explotar (Garantizar al 100% que ocurra).\n2. Mejorar (Aumentar probabilidad o impacto positivo).\n3. Compartir (Asociarse con un socio estratégico para aprovecharlo).\n4. Aceptar (Aprovechar el beneficio si ocurre sin forzarlo).",
+        ejemplo: "Formar un Consorcio/Joint Venture para ganar una licitación gubernamental enorme que solos no podrían ganar es Compartir."
+      },
+      {
+        id: 9,
+        cat: "cronograma",
+        term: "Holgura Libre vs. Holgura Total",
+        pregunta: "¿Qué diferencia a la Holgura Libre de la Holgura Total?",
+        respuesta: "Holgura Total: Tiempo que una actividad puede retrasarse sin retrasar la FECHA DE FIN DEL PROYECTO.\nHolgura Libre: Tiempo que una actividad puede retrasarse sin retrasar el inicio temprano de su actividad sucesora inmediata.",
+        ejemplo: "Si la tarea A puede retrasarse 3 días sin afectar a la tarea B, tiene 3 días de holgura libre."
+      },
+      {
+        id: 10,
+        cat: "alcance",
+        term: "Validar el Alcance vs. Controlar la Calidad",
+        pregunta: "¿Cuál es la diferencia entre Control de Calidad y Validación del Alcance?",
+        respuesta: "Controlar Calidad: Es interno (equipo del proyecto/inspectores) para verificar la exactitud y corrección técnica de los entregables.\nValidar Alcance: Es externo (el Cliente o Patrocinador) para obtener la aceptación formal firmada de los entregables verificados.",
+        ejemplo: "El equipo de testing revisa que no haya bugs (Calidad). El usuario final prueba el software y firma el acta de aceptación (Validar Alcance)."
+      }
+    ];
+
+    let masteredCards = new Set();
+    let currentCategory = "todos";
+
+    // ----------------------------------------------------------------
+    // 3. BASE DE DATOS DEL GLOSARIO TÉCNICO
+    // ----------------------------------------------------------------
+    const glossaryData = [
+      { term: "Acta de Constitución (Project Charter)", tag: "Inicio", def: "Documento emitido por el iniciador o patrocinador que autoriza formalmente la existencia de un proyecto y confiere al director la autoridad para asignar recursos." },
+      { term: "EDT / WBS", tag: "Alcance", def: "Estructura de Desglose del Trabajo: descomposición jerárquica del alcance orientada a entregables de todo el proyecto." },
+      { term: "Ruta Crítica (CPM)", tag: "Cronograma", def: "Secuencia de actividades que representan el camino más largo a través de un proyecto, determinando la menor duración posible." },
+      { term: "Línea Base del Alcance", tag: "Alcance", def: "Versión aprobada del Enunciado del Alcance del Proyecto, la EDT y su Diccionario asociado, que solo puede cambiarse mediante el CCB." },
+      { term: "Valor Ganado (EV - Earned Value)", tag: "Costos", def: "Medida del trabajo completado expresada en términos del presupuesto asignado a dicho trabajo." },
+      { term: "Valor Planificado (PV - Planned Value)", tag: "Costos", def: "Presupuesto autorizado que se ha asignado al trabajo programado que debería haberse completado a la fecha." },
+      { term: "Costo Real (AC - Actual Cost)", tag: "Costos", def: "Costo total incurrido y registrado al llevar a cabo el trabajo ejecutado durante un período determinado." },
+      { term: "Comité de Control de Cambios (CCB)", tag: "Gobernanza", def: "Grupo formalmente constituido responsable de revisar, evaluar, aprobar o diferir los cambios propuestos al proyecto." },
+      { term: "Factores Ambientales (EEFs)", tag: "Entorno", def: "Condiciones que no están bajo el control inmediato del equipo del proyecto y que influyen, restringen o dirigen el proyecto (cultura, leyes, mercado)." },
+      { term: "Activos de Procesos (OPAs)", tag: "Entorno", def: "Planes, procesos, políticas, procedimientos y bases de conocimiento específicos de la organización ejecutora (lecciones aprendidas históricas)." },
+      { term: "Fast Tracking", tag: "Cronograma", def: "Técnica de compresión que realiza fases o actividades en paralelo que normalmente se realizaban de forma secuencial." },
+      { term: "Crashing", tag: "Cronograma", def: "Técnica de compresión utilizada para acortar la duración del cronograma con el menor costo incremental mediante la adición de recursos." }
+    ];
+
+    // ----------------------------------------------------------------
+    // 4. CONTROL DE PESTAÑAS Y NAVEGACIÓN
+    // ----------------------------------------------------------------
+    function changeTab(targetTab) {
+      document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
+      const activeEl = document.getElementById('view-' + targetTab);
+      if (activeEl) activeEl.classList.add('active');
+
+      // Actualizar botones en desktop
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        if (btn.dataset.view === targetTab) {
+          btn.classList.add('bg-brand-800', 'text-white');
+          btn.classList.remove('text-slate-300');
+        } else {
+          btn.classList.remove('bg-brand-800', 'text-white');
+          btn.classList.add('text-slate-300');
+        }
+      });
+
+      // Actualizar botones en móvil
+      document.querySelectorAll('.nav-m-btn').forEach(btn => {
+        if (btn.dataset.view === targetTab) {
+          btn.classList.add('bg-brand-800', 'text-white');
+          btn.classList.remove('text-slate-300');
+        } else {
+          btn.classList.remove('bg-brand-800', 'text-white');
+          btn.classList.add('text-slate-300');
+        }
+      });
+
+      lucide.createIcons();
+    }
+
+    // ----------------------------------------------------------------
+    // 5. RENDERIZADO DEL EXPLORADOR DE FASES
+    // ----------------------------------------------------------------
+    function setEnfoque(enf) {
+      activeEnfoque = enf;
+      const btnPred = document.getElementById('btn-enf-pred');
+      const btnAgil = document.getElementById('btn-enf-agil');
+      
+      if (enf === 'predictivo') {
+        btnPred.className = "px-3 py-1 rounded bg-white text-brand-900 shadow-xs";
+        btnAgil.className = "px-3 py-1 rounded hover:text-brand-900 text-slate-600";
+      } else {
+        btnAgil.className = "px-3 py-1 rounded bg-white text-brand-900 shadow-xs";
+        btnPred.className = "px-3 py-1 rounded hover:text-brand-900 text-slate-600";
+      }
+      renderPhaseDetail(activePhase);
+    }
+
+    function renderPhaseButtons() {
+      const container = document.getElementById('phase-tabs-container');
+      container.innerHTML = Object.keys(phasesData).map(key => {
+        const p = phasesData[key];
+        const isActive = key === activePhase;
+        return `
+          <button 
+            onclick="selectPhase('${key}')" 
+            class="phase-btn p-3 text-left rounded-xl border transition flex flex-col justify-between ${
+              isActive 
+                ? 'border-brand-800 bg-brand-900 text-white shadow-sm' 
+                : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
+            }"
+            id="phase-btn-${key}"
+          >
+            <span class="text-[10px] font-mono tracking-widest uppercase ${isActive ? 'text-sky-300' : 'text-slate-400'}">Fase ${p.num}</span>
+            <span class="font-bold text-xs sm:text-sm mt-1 leading-snug">${p.name.replace('Grupo de Procesos de ', '')}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectPhase(phaseKey) {
+      activePhase = phaseKey;
+      renderPhaseButtons();
+      renderPhaseDetail(phaseKey);
+    }
+
+    function renderPhaseDetail(phaseKey) {
+      const p = phasesData[phaseKey];
+      const container = document.getElementById('phase-detail-card');
+
+      const enfoqueTexto = activeEnfoque === 'predictivo' 
+        ? p.enfoqueDiff.predictivo 
+        : p.enfoqueDiff.agil;
+
+      container.innerHTML = `
+        <div class="p-6 sm:p-8 bg-slate-900 text-white border-b border-slate-800">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-sky-500/20 text-sky-300 border border-sky-400/30">
+              ${p.badge}
+            </span>
+            <span class="text-xs text-slate-400 font-mono">Fase ${p.num} de 05</span>
+          </div>
+          <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight">${p.name}</h3>
+          <p class="text-slate-300 text-xs sm:text-sm mt-2 max-w-4xl leading-relaxed">${p.desc}</p>
+
+          <!-- Diferenciador de Enfoque Dinámico -->
+          <div class="mt-4 p-3 rounded-lg bg-slate-800/80 border border-slate-700 text-xs flex items-start gap-2.5">
+            <i data-lucide="info" class="w-4 h-4 text-sky-400 flex-shrink-0 mt-0.5"></i>
+            <div>
+              <strong class="text-sky-300 uppercase tracking-wide text-[10px] block">Perspectiva: ${activeEnfoque.toUpperCase()}</strong>
+              <p class="text-slate-200 mt-0.5">${enfoqueTexto}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 sm:p-8 space-y-8 bg-white">
+          <div>
+            <h4 class="font-bold text-sm text-brand-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i data-lucide="list-checks" class="w-4 h-4 text-sky-600"></i> Desglose de Procesos Esenciales y Aplicación Práctica
+            </h4>
+            
+            <div class="space-y-6">
+              ${p.processes.map((proc, idx) => `
+                <div class="border border-slate-200 rounded-xl p-5 hover:border-slate-300 transition bg-slate-50/50">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="space-y-1">
+                      <span class="text-[10px] font-mono text-sky-600 font-bold uppercase tracking-wider">Proceso ${p.num}.${idx+1}</span>
+                      <h5 class="text-base font-bold text-slate-900">${proc.name}</h5>
+                      <p class="text-xs sm:text-sm text-slate-600 leading-relaxed pt-1">${proc.objetivo}</p>
+                    </div>
+                  </div>
+
+                  <!-- ITTOs Simplificados -->
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4 pt-4 border-t border-slate-200 text-xs">
+                    <div class="bg-white p-3 rounded-lg border border-slate-200">
+                      <span class="font-bold text-slate-500 uppercase text-[10px] block mb-1">Entradas Clave</span>
+                      <p class="text-slate-700">${proc.entradas}</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200">
+                      <span class="font-bold text-slate-500 uppercase text-[10px] block mb-1">Herramientas y Técnicas</span>
+                      <p class="text-slate-700">${proc.herramientas}</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200">
+                      <span class="font-bold text-slate-500 uppercase text-[10px] block mb-1">Salidas (Entregables)</span>
+                      <p class="text-slate-700 font-medium">${proc.salidas}</p>
+                    </div>
+                  </div>
+
+                  <!-- Caso de Ejemplo del Mundo Real -->
+                  <div class="mt-4 p-3.5 rounded-lg bg-brand-50 border border-brand-100 text-xs flex items-start gap-3">
+                    <div class="p-1.5 bg-brand-100 rounded text-brand-800 flex-shrink-0">
+                      <i data-lucide="lightbulb" class="w-4 h-4"></i>
+                    </div>
+                    <div class="space-y-1">
+                      <strong class="text-brand-900 block text-[11px] uppercase tracking-wide">Ejemplo del mundo real en la industria:</strong>
+                      <p class="text-slate-700 leading-relaxed">${proc.ejemploReal}</p>
+                    </div>
+                  </div>
+
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    // ----------------------------------------------------------------
+    // 6. RENDERIZADO DE FLASHCARDS INTERACTIVAS
+    // ----------------------------------------------------------------
+    function filterFlashcards(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.fc-filter').forEach(btn => {
+        if (btn.dataset.cat === cat) {
+          btn.className = "fc-filter px-3 py-1.5 rounded-full font-medium bg-brand-900 text-white";
+        } else {
+          btn.className = "fc-filter px-3 py-1.5 rounded-full font-medium bg-slate-100 text-slate-700 hover:bg-slate-200";
+        }
+      });
+      renderFlashcards();
+    }
+
+    function toggleFlip(id) {
+      const inner = document.getElementById(`card-inner-${id}`);
+      if (inner) {
+        inner.classList.toggle('rotate-y-180');
+      }
+    }
+
+    function toggleMastered(e, id) {
+      e.stopPropagation();
+      if (masteredCards.has(id)) {
+        masteredCards.delete(id);
+      } else {
+        masteredCards.add(id);
+      }
+      document.getElementById('mastered-count').innerText = masteredCards.size;
+      renderFlashcards();
+    }
+
+    function renderFlashcards() {
+      const grid = document.getElementById('flashcards-grid');
+      const filtered = flashcardsData.filter(c => currentCategory === "todos" || c.cat === currentCategory);
+
+      document.getElementById('total-cards-count').innerText = flashcardsData.length;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 text-sm">No hay tarjetas en esta categoría.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(c => {
+        const isMastered = masteredCards.has(c.id);
+        return `
+          <div class="perspective-1000 h-72 cursor-pointer group" onclick="toggleFlip(${c.id})">
+            <div id="card-inner-${c.id}" class="relative w-full h-full transform-style-preserve-3d transition-transform duration-500 shadow-sm rounded-2xl">
+              
+              <!-- CARA FRONTAL -->
+              <div class="absolute inset-0 w-full h-full backface-hidden bg-white border ${isMastered ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200'} rounded-2xl p-6 flex flex-col justify-between hover:shadow-md transition">
+                <div>
+                  <div class="flex justify-between items-start gap-2">
+                    <span class="text-[10px] font-mono uppercase tracking-wider font-bold px-2 py-0.5 rounded ${
+                      c.cat === 'cronograma' ? 'bg-sky-100 text-sky-800' :
+                      c.cat === 'costos' ? 'bg-emerald-100 text-emerald-800' :
+                      c.cat === 'alcance' ? 'bg-amber-100 text-amber-800' : 'bg-purple-100 text-purple-800'
+                    }">${c.cat}</span>
+                    
+                    <button 
+                      onclick="toggleMastered(event, ${c.id})" 
+                      class="text-xs p-1 rounded-md transition ${isMastered ? 'text-emerald-600 bg-emerald-100' : 'text-slate-400 hover:text-emerald-600'}"
+                      title="${isMastered ? 'Marcar como pendiente' : 'Marcar como dominada'}"
+                    >
+                      <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                  <h4 class="text-base sm:text-lg font-bold text-slate-900 mt-4 leading-snug">${c.term}</h4>
+                  <p class="text-xs sm:text-sm text-slate-600 mt-2 font-medium">${c.pregunta}</p>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                  <span class="flex items-center gap-1">
+                    <i data-lucide="rotate-cw" class="w-3.5 h-3.5 text-sky-500"></i> Clic para voltear
+                  </span>
+                  <span>${isMastered ? '✓ Dominada' : 'Pendiente'}</span>
+                </div>
+              </div>
+
+              <!-- CARA POSTERIOR -->
+              <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 bg-brand-900 text-white rounded-2xl p-6 flex flex-col justify-between shadow-md">
+                <div class="space-y-3 overflow-y-auto max-h-[190px] pr-1">
+                  <span class="text-[10px] font-mono text-sky-300 uppercase tracking-widest block font-bold">Definición y Clave PMP</span>
+                  <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">${c.respuesta.replace(/\n/g, '<br>')}</p>
+                  <div class="p-2.5 rounded bg-brand-950/80 border border-brand-800 text-[11px] text-sky-200">
+                    <strong>En la práctica:</strong> ${c.ejemplo}
+                  </div>
+                </div>
+
+                <div class="pt-2 border-t border-brand-800 flex items-center justify-between text-[11px] text-slate-400">
+                  <span class="flex items-center gap-1">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-sky-400"></i> Voltear de nuevo
+                  </span>
+                  <span class="text-sky-300 font-mono">Concepto #${c.id}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    // ----------------------------------------------------------------
+    // 7. GLOSARIO EN TIEMPO REAL
+    // ----------------------------------------------------------------
+    function renderGlossary(items) {
+      const container = document.getElementById('glossary-grid');
+      if (items.length === 0) {
+        container.innerHTML = `<div class="col-span-full text-center py-8 text-slate-400 text-xs">No se encontraron términos coincidentes.</div>`;
+        return;
+      }
+      container.innerHTML = items.map(item => `
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-2">
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-slate-100 text-slate-600">${item.tag}</span>
+            </div>
+            <h4 class="font-bold text-sm text-brand-900">${item.term}</h4>
+            <p class="text-xs text-slate-600 mt-1 leading-relaxed">${item.def}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function searchGlossary() {
+      const query = document.getElementById('glossary-search').value.toLowerCase();
+      const filtered = glossaryData.filter(g => 
+        g.term.toLowerCase().includes(query) || 
+        g.def.toLowerCase().includes(query) || 
+        g.tag.toLowerCase().includes(query)
+      );
+      renderGlossary(filtered);
+    }
+
+    // ----------------------------------------------------------------
+    // 8. ASISTENTE MENTOR PMP IA (LLM GEMINI API INTEGRATION)
+    // ----------------------------------------------------------------
+    let chatConversation = [];
+
+    const systemPromptPMP = `Eres el "Mentor Senior PMP de PMBOK Academy", un asesor pedagógico de clase mundial en Gestión de Proyectos certificado por el PMI.
+Tu misión es enseñar de manera clara, interactiva y estructurada tanto a principiantes como a profesionales que se preparan para el examen PMP®.
+Reglas para responder:
+1. Explica los conceptos con un tono profesional, motivador y sumamente claro.
+2. Si te preguntan sobre una situación de proyecto, analiza la causa raíz y explica qué dice la 'Mentalidad PMI' (por ejemplo: nunca actuar reactivamente sin analizar el impacto en la línea base primero).
+3. Utiliza siempre analogías sencillas del mundo real (construcción, desarrollo de software o negocios) para afianzar conceptos abstractos como EVM, holguras, o tipos de contratos.
+4. Mantén las respuestas sintetizadas, con viñetas claras y legibles, evitando tecnicismos innecesarios sin antes explicarlos.`;
+
+    async function handleChatSubmit(e) {
+      if (e) e.preventDefault();
+      const inputEl = document.getElementById('chat-input');
+      const text = inputEl.value.trim();
+      if (!text) return;
+
+      appendChatMessage('user', text);
+      inputEl.value = '';
+
+      const sendBtn = document.getElementById('chat-send-btn');
+      const statusEl = document.getElementById('chat-status');
+      sendBtn.disabled = true;
+      statusEl.innerText = "El Mentor está analizando...";
+
+      // Añadir indicador temporal de pensamiento
+      const loadingId = appendLoadingIndicator();
+
+      try {
+        const apiKey = ""; // Canvas inyectará la clave en tiempo de ejecución
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+        // Preparar payload para la API
+        const payload = {
+          contents: [
+            ...chatConversation.map(m => ({
+              role: m.role === 'user' ? 'user' : 'model',
+              parts: [{ text: m.text }]
+            })),
+            {
+              role: 'user',
+              parts: [{ text: text }]
+            }
+          ],
+          systemInstruction: {
+            parts: [{ text: systemPromptPMP }]
+          }
+        };
+
+        // Llamada con reintento / backoff exponencial simple
+        const response = await fetchWithRetry(apiUrl, payload);
+        const data = await response.json();
+
+        removeLoadingIndicator(loadingId);
+
+        if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+          const aiResponse = data.candidates[0].content.parts[0].text;
+          appendChatMessage('mentor', aiResponse);
+          // Registrar en historial local
+          chatConversation.push({ role: 'user', text: text });
+          chatConversation.push({ role: 'model', text: aiResponse });
+        } else {
+          appendChatMessage('mentor', 'Disculpa, no logré formular una respuesta en este momento. Por favor reformula tu pregunta sobre el PMBOK.');
+        }
+
+      } catch (error) {
+        console.error('Error al conectar con Gemini:', error);
+        removeLoadingIndicator(loadingId);
+        appendChatMessage('mentor', 'Ocurrió un problema de conectividad temporal con el servicio de IA. Inténtalo nuevamente en unos instantes.');
+      } finally {
+        sendBtn.disabled = false;
+        statusEl.innerText = "Listo para consultar";
+      }
+    }
+
+    async function fetchWithRetry(url, payload, retries = 3, delay = 1000) {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (res.ok) return res;
+        } catch (err) {
+          if (i === retries - 1) throw err;
+        }
+        await new Promise(r => setTimeout(r, delay * Math.pow(2, i)));
+      }
+      return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+
+    function appendChatMessage(sender, text) {
+      const messagesContainer = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      
+      if (sender === 'user') {
+        div.className = "flex items-start justify-end gap-3";
+        div.innerHTML = `
+          <div class="bg-brand-900 text-white rounded-2xl rounded-tr-none p-3.5 max-w-xl text-xs sm:text-sm leading-relaxed shadow-sm">
+            ${escapeHTML(text)}
+          </div>
+          <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center flex-shrink-0 text-xs font-bold">
+            Tú
+          </div>
+        `;
+      } else {
+        div.className = "flex items-start gap-3";
+        // Formato básico de Markdown para saltos de línea y negritas
+        const formatted = formatMarkdown(text);
+        div.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-brand-900 text-sky-400 flex items-center justify-center flex-shrink-0 text-xs font-bold">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <div class="bg-slate-100 border border-slate-200 text-slate-800 rounded-2xl rounded-tl-none p-3.5 max-w-2xl text-xs sm:text-sm leading-relaxed space-y-2">
+            ${formatted}
+          </div>
+        `;
+      }
+
+      messagesContainer.appendChild(div);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      lucide.createIcons();
+    }
+
+    function appendLoadingIndicator() {
+      const id = 'loading-' + Date.now();
+      const messagesContainer = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.id = id;
+      div.className = "flex items-start gap-3";
+      div.innerHTML = `
+        <div class="w-8 h-8 rounded-full bg-brand-900 text-sky-400 flex items-center justify-center flex-shrink-0 text-xs font-bold">
+          <i data-lucide="bot" class="w-4 h-4 animate-spin"></i>
+        </div>
+        <div class="bg-slate-100 border border-slate-200 text-slate-500 rounded-2xl rounded-tl-none p-3 text-xs flex items-center gap-2">
+          <span>Pensando según el estándar PMBOK</span>
+          <span class="flex gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce [animation-delay:0.2s]"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce [animation-delay:0.4s]"></span>
+          </span>
+        </div>
+      `;
+      messagesContainer.appendChild(div);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      lucide.createIcons();
+      return id;
+    }
+
+    function removeLoadingIndicator(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    function askPresetPrompt(promptText) {
+      changeTab('mentor-ia');
+      document.getElementById('chat-input').value = promptText;
+      handleChatSubmit(null);
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+    }
+
+    function formatMarkdown(str) {
+      // Formato básico amigable para párrafos, negritas y listas
+      let res = escapeHTML(str);
+      res = res.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      res = res.replace(/^\* (.*$)/gim, '• $1');
+      res = res.replace(/\n\n/g, '</p><p>');
+      res = res.replace(/\n/g, '<br>');
+      return `<p>${res}</p>`;
+    }
+
+    // ----------------------------------------------------------------
+    // 9. CALCULADORA EVM
+    // ----------------------------------------------------------------
+    function runEVMAnalysis() {
+      const bac = parseFloat(document.getElementById('evm-bac').value) || 0;
+      const pv = parseFloat(document.getElementById('evm-pv').value) || 0;
+      const ev = parseFloat(document.getElementById('evm-ev').value) || 0;
+      const ac = parseFloat(document.getElementById('evm-ac').value) || 0;
+
+      if (pv <= 0 || ac <= 0) {
+        alert("Por favor asegúrate de ingresar números mayores a cero en PV y AC.");
+        return;
+      }
+
+      const cv = ev - ac;
+      const sv = ev - pv;
+      const cpi = ev / ac;
+      const spi = ev / pv;
+      const eac = cpi > 0 ? (bac / cpi) : 0;
+      const vac = bac - eac;
+
+      const cvEl = document.getElementById('metric-cv');
+      cvEl.innerText = (cv >= 0 ? "+$" : "-$") + Math.abs(cv).toLocaleString();
+      cvEl.className = `text-lg sm:text-xl font-extrabold mt-1 ${cv >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+      const svEl = document.getElementById('metric-sv');
+      svEl.innerText = (sv >= 0 ? "+$" : "-$") + Math.abs(sv).toLocaleString();
+      svEl.className = `text-lg sm:text-xl font-extrabold mt-1 ${sv >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+      const cpiEl = document.getElementById('metric-cpi');
+      cpiEl.innerText = cpi.toFixed(2);
+      cpiEl.className = `text-lg sm:text-xl font-extrabold mt-1 ${cpi >= 1 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+      const spiEl = document.getElementById('metric-spi');
+      spiEl.innerText = spi.toFixed(2);
+      spiEl.className = `text-lg sm:text-xl font-extrabold mt-1 ${spi >= 1 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+      const feedback = document.getElementById('evm-feedback');
+
+      let situacionCosto = cpi >= 1 
+        ? `<span class="text-emerald-700 font-bold">Bajo Presupuesto (Eficiente)</span>: Se están entregando $${cpi.toFixed(2)} de valor por cada dólar real invertido.`
+        : `<span class="text-rose-700 font-bold">Sobre Presupuesto (Sobrecosto)</span>: Solo se están generando $${cpi.toFixed(2)} de valor por cada dólar gastado.`;
+
+      let situacionTiempo = spi >= 1 
+        ? `<span class="text-emerald-700 font-bold">Adelantado en Cronograma</span>: El ritmo de avance físico progresa más rápido de lo proyectado a esta fecha.`
+        : `<span class="text-rose-700 font-bold">Con Retraso Temporal</span>: El ritmo del trabajo va por detrás del cronograma aprobado.`;
+
+      feedback.innerHTML = `
+        <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
+          <strong>1. Diagnóstico de Eficiencia en Costos (CPI = ${cpi.toFixed(2)}):</strong>
+          <p class="text-xs text-slate-700">${situacionCosto}</p>
+        </div>
+        <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
+          <strong>2. Diagnóstico de Cronograma (SPI = ${spi.toFixed(2)}):</strong>
+          <p class="text-xs text-slate-700">${situacionTiempo}</p>
+        </div>
+        <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
+          <strong>3. Pronóstico al Cierre (Estimación a la Conclusión - EAC):</strong>
+          <p class="text-xs text-slate-700">
+            Manteniendo el ritmo actual, el costo total final proyectado será de <strong>$${eac.toLocaleString(undefined, {maximumFractionDigits: 0})} USD</strong>.
+            La variación a la conclusión (VAC) será de <strong>${(vac >= 0 ? "+$" : "-$") + Math.abs(vac).toLocaleString(undefined, {maximumFractionDigits: 0})} USD</strong>.
+          </p>
+        </div>
+      `;
+    }
+
+    // ----------------------------------------------------------------
+    // 10. DESCARGA DE ARTEFACTOS
+    // ----------------------------------------------------------------
+    function downloadArtifact(type) {
+      let fileName = "";
+      let textContent = "";
+
+      if (type === 'charter') {
+        fileName = "Project_Charter_PMBOK.txt";
+        textContent = `========================================================
+ACTA DE CONSTITUCIÓN DEL PROYECTO (PROJECT CHARTER)
+Estándar PMI / PMBOK 
+========================================================
+
+1. INFORMACIÓN GENERAL
+- Nombre del Proyecto: [Nombre Oficial]
+- Patrocinador Principal (Sponsor): [Nombre y Cargo]
+- Director del Proyecto (Project Manager): [Nombre Asignado]
+- Fecha de Formalización: [DD/MM/AAAA]
+
+2. PROPÓSITO Y CASO DE NEGOCIO
+- Justificación Estratégica:
+- Objetivos de Negocio que Resuelve:
+
+3. OBJETIVOS MEDIBLES Y CRITERIOS DE ÉXITO
+- Alcance:
+- Tiempo (Hitos clave):
+- Presupuesto Inicial Autorizado:
+- Calidad:
+
+4. LÍMITES DEL PROYECTO
+- Dentro del Alcance (In Scope):
+- Fuera del Alcance (Out of Scope):
+
+5. ASIGNACIÓN FORMAL DE AUTORIDAD AL PM
+- Nivel de Autoridad Financiera: Hasta $[Monto] sin requerir aprobación adicional.
+- Autoridad sobre Recursos Humanos: Autorizado para seleccionar y liderar al equipo.
+
+FIRMA DE AUTORIZACIÓN:
+_________________________________
+Patrocinador Ejecutivo`;
+      } else if (type === 'riesgos') {
+        fileName = "Matriz_Registro_Riesgos_PMBOK.txt";
+        textContent = `========================================================
+REGISTRO Y MATRIZ DE RIESGOS DEL PROYECTO
+========================================================
+
+CAMPOS ESTÁNDAR:
+[ID] | [Descripción del Riesgo] | [Probabilidad 1-5] | [Impacto 1-5] | [Severidad (PxI)] | [Estrategia: Evitar/Mitigar/Transferir/Aceptar] | [Plan de Acción] | [Dueño del Riesgo]
+
+EJEMPLOS DOCUMENTADOS:
+R-001 | Retraso en entrega de licencias de software por proveedor | P: 4 | I: 4 | Score: 16 | Mitigar | Compra anticipada y cláusula de penalización en contrato | Líder Técnico
+R-002 | Fluctuación en el tipo de cambio internacional de divisas | P: 3 | I: 3 | Score: 9 | Transferir | Contrato de cobertura cambiaria (Forward) con el banco | Director Financiero`;
+      } else if (type === 'cambios') {
+        fileName = "Solicitud_Control_Cambios_CR.txt";
+        textContent = `========================================================
+SOLICITUD DE CAMBIO (CHANGE REQUEST - CR)
+Control Integrado de Cambios
+========================================================
+
+1. DATOS DE IDENTIFICACIÓN
+- Código de Solicitud: CR-001
+- Solicitante: [Nombre y Rol]
+- Fecha: [DD/MM/AAAA]
+
+2. DESCRIPCIÓN Y JUSTIFICACIÓN
+- Situación Actual:
+- Cambio Solicitado:
+- Justificación / Valor de Negocio:
+
+3. EVALUACIÓN DE IMPACTO TÉCNICO
+- Impacto en Alcance:
+- Impacto en Cronograma:
+- Impacto en Costo:
+- Impacto en Riesgos:
+
+4. DICTAMEN DEL COMITÉ DE CONTROL DE CAMBIOS (CCB)
+[ ] APROBADO   [ ] RECHAZADO   [ ] DIFERIDO
+
+Observaciones: ___________________________________
+Firmas CCB: _____________________________________`;
+      }
+
+      const blob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Inicialización al cargar la aplicación
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      renderPhaseButtons();
+      renderPhaseDetail('inicio');
+      renderFlashcards();
+      renderGlossary(glossaryData);
+      runEVMAnalysis();
+    });
+  </script>
+</body>
+</html>
